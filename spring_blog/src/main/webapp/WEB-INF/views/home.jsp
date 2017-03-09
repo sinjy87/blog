@@ -39,7 +39,7 @@
 	</c:otherwise>
 </c:choose>
 
-<P>  The time on the server is ${serverTime}. </P>
+<P>  The time on the server is ${serverTime}. 안녕 </P>
 </div>
 
 
