@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="reply_create">
+
+<!-- 댓글 생성 -->
+<insert id="create" parameterType="DTO">
+insert into reply_create(reply_num, id, reply_content, reply_grpno,
+reply_date)
+values((select nvl (max(reply_num),0)+1 from reply_create),
+#{id},#{reply_content},
+(select nvl (max(reply_grpno),0)+1 from reply_create),sysdate)
+</insert>
+
+<!-- 댓글 수정 -->
+<update id="update" parameterType="DTO">
+update reply_create
+set reply_content=#{reply_content}
+where reply_num= #{reply_num}
+</update>
+
+<!-- 댓글에 답글 생성 -->
+<insert id="rcreate" parameterType="DTO">
+insert into reply_create(reply_num, id, reply_content, reply_grpno,
+reply_indent,reply_ansnum,reply_date)
+values((select nvl (max(reply_num),0)+1 from reply_create),#{id},#{reply_content}
+,#{reply_grpno},(select nvl (max(reply_indent),0)+1 from reply_create),
+(select nvl (max(reply_ansnum),0)+1 from reply_create),sysdate); 
+</insert>
+
+<!-- 답글 삭제 -->
+<delete id="delete" parameterType="int">
+delete from reply_create 
+where reply_num= #{reply_num};
+</delete>
+
+</mapper>

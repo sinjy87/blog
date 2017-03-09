@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+  <mapper namespace="calendar">
+ 
+  <!-- 레코드 추가 -->
+  <insert id="create" parameterType="CalendarDTO">
+    <!-- keyProperty: 번호를 저장할 컬럼명, resultType: int숫자 형태 -->
+    <selectKey keyProperty="calendarno" resultType="int" order="BEFORE">
+      SELECT NVL(MAX(calendarno), 0)+1 as calendarno FROM calendar
+      <!-- 
+      MySQL
+      SELECT IFNULL(MAX(calendarno), 0)+1 as calendarno FROM calendar
+       -->
+    </selectKey>
+    INSERT INTO calendar(calendarno, labeldate, label, title, content, cnt, rdate)
+    VALUES(#{calendarno}, #{labeldate}, #{label}, #{title}, #{content}, 0, sysdate)
+  </insert>
+ 
+  <select id="list" resultType="CalendarDTO">
+    SELECT calendarno, labeldate, label, title, content, cnt, rdate
+    FROM calendar
+    ORDER BY calendarno DESC
+  </select>
+  
+  <!-- 1개의 레코드 출력 -->
+  <select id="read" parameterType="int" resultType="CalendarDTO">
+    SELECT calendarno, labeldate, label, title, content, cnt, rdate
+    FROM calendar
+    WHERE calendarno = #{calendarno}
+  </select>
+ 
+  <!-- 글 수정 -->
+  <update id="update" parameterType="CalendarDTO">
+    UPDATE calendar
+    SET labeldate=#{labeldate}, label=#{label}, title=#{title}, content=#{content}
+    WHERE calendarno = #{calendarno}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM calendar
+    WHERE calendarno=#{calendarno}   
+  </delete>
+ 
+  <!-- 1개의 레코드 출력 -->
+  <select id="label" parameterType="String" resultType="CalendarDTO" >
+    SELECT calendarno, labeldate, label
+    FROM calendar
+    WHERE labeldate = #{labeldate}
+    <!-- 최적화 ↑-->
+<!--    WHERE substr(labeldate, 1, 10) = #labeldate# -->
+    
+  </select>
+ 
+</mapper>

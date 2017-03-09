@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="memoreply">
+
+     <select id="rcount" parameterType="int" resultType="int">
+     SELECT count(*) FROM memoreply
+     WHERE memono = #{memono}
+    </select>
+
+	<insert id="create" parameterType="MemoreplyDTO">
+		<selectKey keyProperty="rnum" resultType="int" order="BEFORE">
+			select nvl(max(rnum),0)+1 from memoreply
+		</selectKey>
+		insert into memoreply(rnum, content, regdate, id, memono)
+		values(#{rnum}, #{content}, sysdate, #{id}, #{memono})
+	</insert>
+
+	<select id="read" parameterType="int" resultType="MemoreplyDTO">
+		select * from memoreply
+		where rnum = #{rnum}
+	</select>
+
+	<update id="update" parameterType="MemoreplyDTO">
+		update memoreply
+		set content = #{content}
+		where rnum = #{rnum}
+
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from memoreply
+		where rnum = #{rnum}
+	</delete>
+	<delete id="bdelete" parameterType="int">
+		delete from memoreply
+		where memono = #{memono}
+	</delete>
+	<select id="list" parameterType="Map" resultType="MemoreplyDTO">
+		select rnum, content, to_char(regdate,'yyyy-mm-dd') regdate, id,
+		memono, r
+		FROM(
+		select rnum, content, regdate, id, memono, rownum r
+		FROM(
+		select rnum, content, regdate, id, memono
+		from memoreply
+		order by rnum DESC
+		)
+<![CDATA[
+)WHERE r >= #{sno} and r <= #{eno}
+]]>
+	</select>
+
+	<select id="total" resultType="int" parameterType="int">
+		select count(*) from memoreply
+		where memono=#{memono}
+	</select>
+
+</mapper>

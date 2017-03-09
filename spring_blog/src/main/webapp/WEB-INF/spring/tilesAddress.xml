@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE  tiles-definitions PUBLIC 
+    "-//Aapche Software Foundation//DTD Tiles Configuration 2.0//EN" 
+    "http://tiles.apache.org/dtds/tiles-config_2_0.dtd"> 
+
+<tiles-definitions> 
+
+<definition name="/address/list" extends="main"> 
+        <put-attribute name="title" value="주소 목록" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/address/list.jsp" /> 
+    </definition>   
+    <definition name="/address/read" extends="main"> 
+        <put-attribute name="title" value="조회" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/address/read.jsp" /> 
+    </definition>  
+        <definition name="/address/create" extends="main"> 
+        <put-attribute name="title" value="주소 작성" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/address/createForm.jsp" /> 
+    </definition>   
+    <definition name="/address/update" extends="main"> 
+        <put-attribute name="title" value="주소 수정" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/address/updateForm.jsp" /> 
+    </definition>  
+    <definition name="/address/delete" extends="main"> 
+        <put-attribute name="title" value="주소 삭제" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/address/delete.jsp" /> 
+    </definition>  
+
+
+
+</tiles-definitions> 

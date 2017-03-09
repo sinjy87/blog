@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="image"> 
+
+<update id="upViewcnt" parameterType="int">
+update image       
+set viewcnt = viewcnt + 1
+where no = #{no}     
+</update>
+
+<select id="checkRefno" parameterType="int" resultType="int">
+select count(refno) from image
+where refno = #{no}         
+</select>
+
+<update id="upAno" parameterType="Map">
+update image         
+set ano = ano + 1     
+where gno = #{gno} 
+and ano > #{ano}
+</update>
+
+<insert id="createReply" parameterType="ImageDTO">
+INSERT INTO image(no, name, title, content, passwd, wdate, gno, 
+ino, ano,refno,  filename)
+VALUES((SELECT NVL(MAX(no), 0) + 1 FROM image),                                      
+#{name}, #{title}, #{content}, #{passwd},  sysdate,                                                                  
+#{gno}, #{ino}+1, #{ano}+1,#{no},  #{filename} )                                                                       
+</insert>
+
+<select id="readReply" resultType="ImageDTO" parameterType="int">
+SELECT no, title, gno, ino, ano
+FROM image                  
+WHERE no = #{no}                
+</select>
+
+<select id="total" parameterType="Map" resultType="int">
+select count(*) from image
+		<where>
+		<if test="col == name">
+		name like '%'||#{word}||'%'
+		</if>
+		<if test="col == title">
+		title like '%'||#{word}||'%'
+		</if>
+		</where>
+</select>
+
+<select id="list" resultType="ImageDTO" parameterType="Map">
+select no, name, title, content, viewcnt, wdate, filename, ino,gno,ano, r                               
+from(                                                                                              
+select no, name, title, content, viewcnt, wdate, filename, ino ,gno,ano, rownum r                       
+from(                                                                                              
+		select no, name, title, content, viewcnt, 
+		to_char(wdate, 'yyyy-mm-dd') wdate, filename, ino ,gno,ano
+		from image                                               
+		<where>
+		<if test="col == name">
+		name like '%'||#{word}||'%'
+		</if>
+		<if test="col == title">
+		title like '%'||#{word}||'%'
+		</if>
+		</where>
+		
+		order by gno desc, ano ASC 
+	)
+)                                 
+<![CDATA[where r>=#{sno} and r<=#{eno}]]>   
+</select>
+
+<select id="passwd" parameterType="Map" resultType="int">
+	select count(no) from image
+	where no=#{no} and passwd=#{passwd} 
+</select>
+
+<delete id="delete" parameterType="int">
+	delete from image
+	where no= #{no}   
+</delete>
+
+<update id="updateFile" parameterType="ImageDTO">
+	update image set
+	                
+	filename = #{filename}
+	where no = #{no}
+</update>
+
+<update id="update" parameterType="ImageDTO">
+	update image set
+	name = #{name},  
+	title = #{title},  
+	content = #{content},  
+	passwd = #{passwd},  
+	filename = #{filename} 
+	where no = #{no}  
+</update>
+
+<select id="read" resultType="ImageDTO" parameterType="int">
+	select no, name, title, content, viewcnt, to_char(wdate,'yyyy-mm-dd') wdate, filename
+	from image                                                                        
+	where no = #{no}                                                                     
+</select>
+
+<insert id="create" parameterType="ImageDTO">
+insert into image ( no , name , title , content ,passwd  ,wdate ,filename ,gno  )                         
+                                                                                                              
+ values((select nvl(max(no),0)+1 from image) ,
+  #{name} , #{title} , #{content} ,#{passwd} , sysdate,
+   #{filename},(select nvl(max(gno),0)+1 from image) )
+</insert>
+
+<select id="sumnail" parameterType="int" resultType="Map">
+	SELECT *FROM
+	(
+	select
+	lag(no,2) over (order by no) pre_no2,
+	lag(no,1) over
+	(order by no ) pre_no1,
+	no,
+	lead(no,1) over (order by no) nex_no1,
+	lead(no,2)
+	over (order by no) nex_no2,
+	lag(filename,2) over (order by
+	no)
+	pre_file2,
+	lag(filename,1) over (order by no ) pre_file1,
+	filename,
+	lead(filename,1) over (order by no) nex_file1,
+	lead(filename,2) over
+	(order by no) nex_file2
+	from (
+	SELECT no, filename
+	FROM image
+	ORDER BY no
+	DESC
+	)
+)
+	WHERE no = #{no}
+</select>
+      
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://www.springframework.org/schema/p" 
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 
+<!-- Root Context: defines shared resources visible to all other web components -->
+<!-- 데이터베이스 접속 설정 -->  
+<bean id="dataSource1" 
+destroy-method="close"
+class="org.apache.commons.dbcp.BasicDataSource" 
+p:driverClassName="oracle.jdbc.driver.OracleDriver" 
+p:url="jdbc:oracle:thin:@127.0.0.1:1521:XE" 
+p:username="soldesk"  
+p:password="1234"  
+/> 
+ 
+ 
+ <!-- MyBatis SQL 실행 클래스  --> 
+ <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource1" />
+    <!-- 아래부분은 매핑할 xml파일이 있는 패키지경로를 설정한다. -->
+    <property name="typeAliasesPackage" value="spring.model" />
+    <property name="mapperLocations" value="classpath:mybatis/*.xml" />
+  </bean>
+ 
+  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+  </bean>
+ 
+<!--     BbsDAO 객체 생성 -->
+    <bean id="bdao"
+       class="spring.model.bbs.BbsDAO"
+       p:sqlSession-ref="sqlSession"/>
+       
+<!--     ReplyDAO 객체 생성 -->
+    <bean id="rdao"
+       class="spring.model.bbs.ReplyDAO"
+       p:sqlSessionTemplate-ref="sqlSession"/>
+       
+<!--     MomeDAO 객체 생성 -->
+    <bean id="mdao"
+       class="spring.model.memo.MemoDAO"
+       p:sqlSession-ref="sqlSession"/>
+       
+<!--     memoreplyDAO 객체 생성 -->
+    <bean id="mrdao"
+       class="spring.model.memo.MemoreplyDAO"
+       p:sqlSessionTemplate-ref="sqlSession"/>
+ 
+</beans>

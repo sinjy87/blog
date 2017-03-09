@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE  tiles-definitions PUBLIC 
+    "-//Aapche Software Foundation//DTD Tiles Configuration 2.0//EN" 
+    "http://tiles.apache.org/dtds/tiles-config_2_0.dtd"> 
+
+<tiles-definitions> 
+
+<definition name="/image/list" extends="main"> 
+        <put-attribute name="title" value="썸네일 목록" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/image/list.jsp" /> 
+    </definition>   
+    <definition name="/image/read" extends="main"> 
+        <put-attribute name="title" value="조회" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/image/read.jsp" /> 
+    </definition>  
+        <definition name="/image/create" extends="main"> 
+        <put-attribute name="title" value="글 자성" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/image/createForm.jsp" /> 
+    </definition>   
+    <definition name="/image/update" extends="main"> 
+        <put-attribute name="title" value="글 수정" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/image/updateForm.jsp" /> 
+    </definition>  
+    <definition name="/image/delete" extends="main"> 
+        <put-attribute name="title" value="글 삭제" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/image/deleteForm.jsp" /> 
+    </definition>  
+        <definition name="/image/reply" extends="main"> 
+        <put-attribute name="title" value="글 답변" ></put-attribute> 
+        <put-attribute name="body" value="/WEB-INF/views/image/replyForm.jsp" /> 
+    </definition>  
+
+
+
+</tiles-definitions> 
